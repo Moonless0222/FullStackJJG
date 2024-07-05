@@ -1,0 +1,86 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>我的第一个页面</title>
+    <link href="./else/css/test01.css" rel="stylesheet" />
+    <script src="./else/js/vue2.js"></script>
+    <script src="./else/js/axios.js"></script>
+  </head>
+  <body>
+    <div id="home">
+      <h1>JJG</h1>
+      <img src="./else/img/cartoon.png" />
+      <hr />
+      <p>
+        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dicta,
+        eligendi explicabo consequuntur accusamus optio, eveniet iusto incidunt
+        beatae vel commodi nemo veniam id nostrum. Assumenda placeat natus nemo
+        blanditiis earum.
+      </p>
+      <h3 v-if="imglist.length===0">尚未获取功能列表</h3>
+      <button class="htmldata" @click="getData1">查看功能</button>
+
+      
+      <div>  
+        <button @click="getData2">获取数据</button>  
+        <div v-if="axiosTorF">  
+          <img src="./else/img/404.jpg" style="width: auto;">  
+        </div>  
+        <ul v-else>  
+          <li v-for="(hero, index) in superhero" :key="index">{{ hero.name }}</li>  
+        </ul>  
+      </div>
+
+      <div class="imgFather">
+        <div class="imglist" v-for="i in imglist">
+          <!-- 直接输入 点imglist自动生成div的类 -->
+          <img v-bind:src="i.address" alt="loding" />
+          <p>{{i.name}}</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      new Vue({
+        el: "#home",
+        data: {
+          imglist: [],
+          superhero: [],
+          axiosTorF:false,
+        },
+        methods: {
+          getData1() {
+            // 这些是直接写死到前端网页里的
+            alert("点击开始获取功能");
+            this.imglist = [
+              { id: 1, name: "系统设置", address: "./else/img/01.png" },
+              { id: 2, name: "仓库管理", address: "./else/img/02.png" },
+              { id: 3, name: "记录日志", address: "./else/img/03.png" },
+              { id: 4, name: "重要提醒", address: "./else/img/04.png" },
+              { id: 1, name: "系统设置", address: "./else/img/01.png" },
+            ];
+          },
+          getData2() {
+            // axios就是ajax的框架
+            axios({
+              method: "get",
+              url: "https://mdn.github.io/learning-area/javascript/oojs/json/superheroes.json",
+            })
+            //then方法与catch方法都属于axios库提供的API函数，分别接收JSON数据与错误信息，当然参数名可以自定义，接收后都可以自己写后续操作逻辑
+            //response就是请求成功后返回的对象，可以粗暴认为就是JSON数据，拿到对象后做什么则由箭头括号内的函数方法决定 （ALT+↑向上挪动整行）
+              .then((response) => { 
+                // console.log(response.data.members[1]);
+                this.superhero = response.data.members;
+                console.log(this.superhero);
+              })
+              .catch((error) => {
+                console.error("请求失败啦😔:", error);
+                this.axiosTorF=true;
+              });
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
